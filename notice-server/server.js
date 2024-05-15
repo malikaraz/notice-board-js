@@ -1,11 +1,15 @@
 const express = require('express');
+const cors = require('cors');
 const fs = require('fs');
 const csvParser = require('csv-parser');
 const { createObjectCsvWriter } = require('csv-writer');
-const { log } = require('console');
 
 const app = express();
-const PORT = 3000;
+
+// Allow requests from all origins
+app.use(cors());
+
+const PORT = 3003;
 const csvFilePath = 'notices.csv';
 
 // Create CSV file if it doesn't exist
@@ -61,10 +65,6 @@ app.get('/notices', async (req, res) => {
 // Create a new notice
 app.post('/notices', async (req, res) => {
     try {
-        log(req.body);
-        log(req.body.title);
-        log(req.body.content);
-
         const notices = await readNotices();
         const newNotice = {
             id: Date.now().toString(),
@@ -115,3 +115,4 @@ app.delete('/notices/:id', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
